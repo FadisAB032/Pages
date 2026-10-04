@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#244c40">
+  <meta name="description" content="給自己一段專注的時間。免費數獨，易、中、難三種難度，支援筆記、提示與自動儲存。">
+  <title>數獨日常 · Sudoku</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23244c40'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='44' fill='%23faf8f2' font-family='serif'%3E9%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./engine.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="數獨日常首頁"><span class="brand-mark" aria-hidden="true">▦</span><span>數獨日常<small>SUDOKU STUDIO</small></span></a>
+    <button class="quiet-button" id="rules-button"><span aria-hidden="true">ⓘ</span> 遊戲規則</button>
+  </header>
+  <main>
+    <section class="intro"><span class="eyebrow"><i></i> A LITTLE SPACE TO THINK</span><h1>把注意力，留給這一格。</h1><p>九個數字，無限可能。享受一段剛剛好的專注時光。</p></section>
+    <div class="layout">
+      <section class="game-card" aria-label="數獨遊戲">
+        <div class="game-heading"><div><span class="eyebrow">CLASSIC SUDOKU</span><h2>經典數獨 <span>9 × 9</span></h2></div><button id="new-button" class="primary-button"><span aria-hidden="true">＋</span> 新遊戲</button></div>
+        <div class="game-settings"><div class="difficulty" role="group" aria-label="選擇難度"><button data-level="easy" aria-pressed="true">易</button><button data-level="medium" aria-pressed="false">中</button><button data-level="hard" aria-pressed="false">難</button></div><div class="timer-wrap"><span aria-hidden="true">◷</span><time id="timer">00:00</time><button id="pause-button" aria-label="暫停遊戲" title="暫停遊戲">Ⅱ</button></div></div>
+        <div class="board-wrap"><div id="board" class="board" role="grid" aria-label="數獨棋盤" aria-rowcount="9" aria-colcount="9"></div><div id="board-overlay" class="board-overlay" hidden><span class="overlay-symbol" aria-hidden="true">Ⅱ</span><h3 id="overlay-title">休息一下</h3><p id="overlay-message">你的進度已保留，準備好再繼續。</p><button class="primary-button" id="resume-button">繼續遊戲</button></div></div>
+        <div class="progress-meta"><span id="progress-label">已完成 0 / 81 格</span><span id="mistakes-label">錯誤 0 次</span></div><div class="progress-track"><div id="progress-bar"></div></div>
+        <div class="tools"><button id="undo-button"><span class="tool-icon" aria-hidden="true">↶</span>復原</button><button id="erase-button"><span class="tool-icon" aria-hidden="true">⌫</span>清除</button><button id="notes-button" aria-pressed="false"><span class="tool-icon" aria-hidden="true">✎<small id="notes-badge">OFF</small></span>筆記</button><button id="hint-button"><span class="tool-icon" aria-hidden="true">☼</span>提示 <small id="hints-label">3</small></button></div>
+        <div class="number-pad" id="number-pad" role="group" aria-label="數字輸入鍵"></div>
+        <p class="game-message" id="game-message" role="status" aria-live="polite">先選一格，再選數字。慢慢來，你有的是時間。</p>
+      </section>
+      <aside class="sidebar"><section class="welcome-card"><span class="eyebrow">ONE NUMBER AT A TIME</span><div class="decor-grid" aria-hidden="true"><span>1</span><span></span><span>3</span><span></span><span>5</span><span></span><span>7</span><span></span><span>9</span></div><h2>小小的格子，<br>大大的心流。</h2><p>不必急著找到所有答案。<br>從你確定的那一格開始。</p><div class="card-foot"><span aria-hidden="true">✦</span> 今天，也給大腦一點留白。</div></section>
+        <section class="howto"><h3>輕鬆上手 <span>HOW TO PLAY</span></h3><div><b>01</b><p><strong>選擇格子</strong><br>同行、同列與同宮會一起亮起。</p></div><div><b>02</b><p><strong>填入數字</strong><br>每行、每列、每宮都有 1～9，且不重複。</p></div><div><b>03</b><p><strong>留下一點線索</strong><br>用筆記記下候選數字，慢慢推敲。</p></div></section>
+        <details class="keyboard"><summary>鍵盤也能玩 <span>⌨</span></summary><p>方向鍵：移動選格<br>1～9：填入數字<br>Delete / Backspace：清除<br>N：切換筆記 · Ctrl / ⌘ Z：復原<br>Space：暫停／繼續</p></details>
+        <p class="save-note" id="save-note"><span aria-hidden="true">✓</span> 進度自動儲存在這個瀏覽器</p>
+      </aside>
+    </div>
+  </main>
+  <footer><span>數獨日常</span><span>一點邏輯，一點平靜。</span><span>MADE FOR YOUR MOMENT OF FOCUS</span></footer>
+  <dialog id="rules-dialog"><button class="dialog-close" aria-label="關閉" data-close>×</button><span class="eyebrow">THE SIMPLE RULES</span><h2>九個數字，三個規則。</h2><p>將空白格填入 1～9，讓每一行、每一列，以及每個 3×3 宮格都包含 1～9，且不能重複。題目給定的數字不可修改。</p><p>墨綠色是你的填答；紅色代表答案不正確。數字出現 9 次後，下方按鈕會停用；清除數字後就會恢復。筆記不計入數字數量。</p><button class="primary-button" data-close>開始專注</button></dialog>
+  <dialog id="new-dialog"><span class="eyebrow">A FRESH START</span><h2>開始一場新遊戲？</h2><p>目前這一局的進度將被新題目取代。</p><div class="dialog-actions"><button class="quiet-button" data-close>繼續這一局</button><button id="confirm-new" class="primary-button">開始新遊戲</button></div></dialog>
+  <dialog id="win-dialog"><span class="win-star" aria-hidden="true">✦</span><span class="eyebrow">BEAUTIFULLY SOLVED</span><h2>每一格，都找到答案了。</h2><p id="win-stats"></p><p>讓這份小小的成就，陪你度過今天。</p><div class="dialog-actions"><button class="quiet-button" data-close>欣賞棋盤</button><button id="win-new" class="primary-button">再來一局</button></div></dialog>
+  <noscript>這個數獨遊戲需要啟用 JavaScript 才能遊玩。</noscript>
+</body>
+</html>
