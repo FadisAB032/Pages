@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const LEVELS = { easy: { label: '易', clues: 44 }, medium: { label: '中', clues: 35 }, hard: { label: '難', clues: 28 }, expert: { label: '專家', clues: 24 } };
+  const LEVELS = { easy: { label: '易', clues: 35 }, medium: { label: '中', clues: 28 }, hard: { label: '難', clues: 24 }, expert: { label: '專家', clues: 22 } };
   const row = i => Math.floor(i / 9), col = i => i % 9;
   const box = i => Math.floor(row(i) / 3) * 3 + Math.floor(col(i) / 3);
   const peers = (a, b) => a !== b && (row(a) === row(b) || col(a) === col(b) || box(a) === box(b));
@@ -36,6 +36,30 @@
     }
     visit(); return { count, solution };
   }
+  // Locally generated 22-clue puzzles, each verified to have exactly one solution.
+  const EXPERT_PUZZLES = [
+    "208009040000004000500210000000000004700900306090050000000000008075000020000008103",
+    "050080000000046080700000000000709050009003007000004002023000000508000090000020410",
+    "008009002410300500203080000000010008000050706000002009300000000560000000000008010",
+    "000030002000800059076000000603409001020000000000600300000050040009008700200900000",
+    "400000006200000017000701000610203070000600300000080050030000000050000020009006500",
+    "000000030500700001040030080000000008000302010026059000007010900800006070050000000"
+];
+  function generateExpertFallback() {
+    const source = Array.from(EXPERT_PUZZLES[Math.floor(Math.random() * EXPERT_PUZZLES.length)], Number);
+    const digits = [0, ...shuffle([1,2,3,4,5,6,7,8,9])];
+    // Permute bands/stacks and rows/columns within them; optionally transpose.
+    // These Sudoku symmetries preserve clue count and the number of solutions.
+    const order = () => shuffle([0,1,2]).flatMap(group => shuffle([0,1,2]).map(offset => group * 3 + offset));
+    const rows = order(), cols = order(), transpose = Math.random() < 0.5;
+    const puzzle = Array.from({length:81}, (_, i) => {
+      const r = rows[row(i)], c = cols[col(i)];
+      return digits[source[transpose ? c * 9 + r : r * 9 + c]];
+    });
+    const result = solve(puzzle, 2);
+    if (result.count !== 1) throw new Error('專家題目驗證失敗，請再試一次。');
+    return { puzzle, solution: result.solution, level: 'expert' };
+  }
   function generate(level = 'easy') {
     const target = LEVELS[level]?.clues;
     if (!target) throw new Error('Unknown difficulty');
@@ -49,6 +73,7 @@
         if (clues === target) return { puzzle, solution, level };
       }
     }
+    if (level === 'expert') return generateExpertFallback();
     throw new Error('無法產生題目，請再試一次。');
   }
   const counts = board => Array.from({length:9}, (_, n) => board.filter(v => v === n + 1).length);

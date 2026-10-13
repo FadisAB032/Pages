@@ -5,9 +5,8 @@ const S = require('../engine.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
-test('expert offers 24 clues and every difficulty is selectable in the UI', () => {
-  assert.equal(S.LEVELS.expert.clues,24);
-  assert.ok(S.LEVELS.expert.clues < S.LEVELS.hard.clues);
+test('all four difficulties move up one tier and remain selectable', () => {
+  assert.deepEqual(Object.values(S.LEVELS).map(level => level.clues),[35,28,24,22]);
   const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
   const levels = [...html.matchAll(/data-level="([^"]+)"/g)].map(match => match[1]);
   assert.deepEqual(levels,Object.keys(S.LEVELS));
@@ -64,4 +63,26 @@ test('correct entries remove peer notes, incorrect entries preserve them, and er
   assert.equal(S.applyEntry(state,0,n),true); assert.equal(state.notes[1],0); assert.equal(state.notes[40],1<<n);
   assert.equal(S.applyEntry(state,40,0),true); assert.equal(state.notes[40],0);
   assert.equal(S.applyEntry(state,0,4,true),false); assert.equal(S.applyEntry(state,-1,2),false); assert.equal(S.applyEntry(state,81,2),false);
+});
+
+test('expert fallback templates preserve 22 clues, uniqueness and completion', () => {
+  const vm = require('node:vm');
+  const engine = fs.readFileSync(path.join(__dirname,'../engine.js'),'utf8');
+  // Isolate the fallback to cover every template and both transpose outcomes.
+  const fallbackEngine = engine.replace("    if (!target) throw new Error('Unknown difficulty');", "    if (!target) throw new Error('Unknown difficulty'); if (level === 'expert') return generateExpertFallback();");
+  for (let template = 0; template < 6; template++) for (const transpose of [0.25,0.75]) {
+    let calls = 0;
+    const math = Object.create(Math);
+    math.random = () => ++calls === 1 ? (template + 0.5) / 6 : transpose;
+    const context = {module:{exports:{}},Math:math};
+    vm.runInNewContext(fallbackEngine,context);
+    const game = context.module.exports.generate('expert');
+    assert.equal(game.puzzle.filter(Boolean).length,22);
+    assert.equal(S.solve(Array.from(game.puzzle)).count,1);
+    assert.ok(S.valid(Array.from(game.solution),true));
+    assert.ok(game.puzzle.every((n,i) => !n || n===game.solution[i]));
+    const state = S.createState(game);
+    for(let i=0;i<81;i++) if(!state.puzzle[i]) S.applyEntry(state,i,state.solution[i]);
+    assert.equal(state.completed,true);
+  }
 });
