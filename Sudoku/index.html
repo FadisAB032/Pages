@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#244c40">
-  <meta name="description" content="給自己一段專注的時間。免費數獨，易、中、難三種難度，支援筆記、提示與自動儲存。">
+  <meta name="description" content="給自己一段專注的時間。免費數獨，易、中、難、專家四種難度，支援筆記、提示與自動儲存。">
   <title>數獨日常 · Sudoku</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23244c40'/%3E%3Ctext x='32' y='46' text-anchor='middle' font-size='44' fill='%23faf8f2' font-family='serif'%3E9%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
@@ -21,7 +21,7 @@
     <div class="layout">
       <section class="game-card" aria-label="數獨遊戲">
         <div class="game-heading"><div><span class="eyebrow">CLASSIC SUDOKU</span><h2>經典數獨 <span>9 × 9</span></h2></div><button id="new-button" class="primary-button"><span aria-hidden="true">＋</span> 新遊戲</button></div>
-        <div class="game-settings"><div class="difficulty" role="group" aria-label="選擇難度"><button data-level="easy" aria-pressed="true">易</button><button data-level="medium" aria-pressed="false">中</button><button data-level="hard" aria-pressed="false">難</button></div><div class="timer-wrap"><span aria-hidden="true">◷</span><time id="timer">00:00</time><button id="pause-button" aria-label="暫停遊戲" title="暫停遊戲">Ⅱ</button></div></div>
+        <div class="game-settings"><div class="difficulty" role="group" aria-label="選擇難度"><button data-level="easy" aria-pressed="true">易</button><button data-level="medium" aria-pressed="false">中</button><button data-level="hard" aria-pressed="false">難</button><button data-level="expert" aria-pressed="false">專家</button></div><div class="timer-wrap"><span aria-hidden="true">◷</span><time id="timer">00:00</time><button id="pause-button" aria-label="暫停遊戲" title="暫停遊戲">Ⅱ</button></div></div>
         <div class="board-wrap"><div id="board" class="board" role="grid" aria-label="數獨棋盤" aria-rowcount="9" aria-colcount="9"></div><div id="board-overlay" class="board-overlay" hidden><span class="overlay-symbol" aria-hidden="true">Ⅱ</span><h3 id="overlay-title">休息一下</h3><p id="overlay-message">你的進度已保留，準備好再繼續。</p><button class="primary-button" id="resume-button">繼續遊戲</button></div></div>
         <div class="progress-meta"><span id="progress-label">已完成 0 / 81 格</span><span id="mistakes-label">錯誤 0 次</span></div><div class="progress-track"><div id="progress-bar"></div></div>
         <div class="tools"><button id="undo-button"><span class="tool-icon" aria-hidden="true">↶</span>復原</button><button id="erase-button"><span class="tool-icon" aria-hidden="true">⌫</span>清除</button><button id="notes-button" aria-pressed="false"><span class="tool-icon" aria-hidden="true">✎<small id="notes-badge">OFF</small></span>筆記</button><button id="hint-button"><span class="tool-icon" aria-hidden="true">☼</span>提示 <small id="hints-label">3</small></button></div>
