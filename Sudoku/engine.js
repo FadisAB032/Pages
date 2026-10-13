@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const LEVELS = { easy: { label: '易', clues: 44 }, medium: { label: '中', clues: 35 }, hard: { label: '難', clues: 28 } };
+  const LEVELS = { easy: { label: '易', clues: 44 }, medium: { label: '中', clues: 35 }, hard: { label: '難', clues: 28 }, expert: { label: '專家', clues: 24 } };
   const row = i => Math.floor(i / 9), col = i => i % 9;
   const box = i => Math.floor(row(i) / 3) * 3 + Math.floor(col(i) / 3);
   const peers = (a, b) => a !== b && (row(a) === row(b) || col(a) === col(b) || box(a) === box(b));

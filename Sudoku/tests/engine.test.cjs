@@ -2,6 +2,16 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const S = require('../engine.js');
+const fs = require('node:fs');
+const path = require('node:path');
+
+test('expert offers 24 clues and every difficulty is selectable in the UI', () => {
+  assert.equal(S.LEVELS.expert.clues,24);
+  assert.ok(S.LEVELS.expert.clues < S.LEVELS.hard.clues);
+  const html = fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+  const levels = [...html.matchAll(/data-level="([^"]+)"/g)].map(match => match[1]);
+  assert.deepEqual(levels,Object.keys(S.LEVELS));
+});
 
 for (const level of Object.keys(S.LEVELS)) test(`${level}: 30 randomized puzzles have expected clues and a unique valid solution`, () => {
   const identities = new Set();
